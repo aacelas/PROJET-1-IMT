@@ -48,31 +48,9 @@ def modify(file, id, details):
         print(f"The file {file} was not found")
 
 def rm(file, id):
-    """Remove the task with the given id from the file."""
-    rm_id = find_line_by_id(file, id)
-    try:
-        with open(file, 'r') as f:
-            lines = f.readlines()
-        if rm_id != -1:
-            #if the id was found 
-            # we remove the line by setting it to an empty string 
-            # then writing back only the non-empty lines
-            lines[rm_id] = ''
-            valid_lines = [l for l in lines if l.strip() != '']
-            with open(file, 'w') as f:
-                f.writelines(valid_lines)
-        else:
-            print(f"The task with id {id} does not exist")
-    except FileNotFoundError:
-        print(f"The file {file} was not found")
+    "TODO"
+    None 
 
 def show(file):
-    """Show all tasks in the file."""
-    try:
-        with open(file, 'r') as f:
-            lines = f.readlines()
-            for line in lines:
-                if line.strip() != '':
-                    print(line.strip())
-    except FileNotFoundError:
-        print(f"The file {file} was not found")
+    "TODO"
+    None
