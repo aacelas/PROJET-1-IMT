@@ -18,36 +18,66 @@ def find_first_missing_id(file):
             lines = f.readlines()
             valid_lines = [l.strip() for l in lines if l.strip() != '']
             if len(valid_lines) == 0:
-                return 1
+                return (1,0)
             for i in range(len(valid_lines)-1):
                 current_line = valid_lines[i]
                 next_line = valid_lines[i+1]
                 current_id = int(current_line.split(' | ')[0])
                 next_id = int(next_line.split(' | ')[0])
                 if next_id != current_id + 1:
-                    return current_id + 1
-            return int(valid_lines[-1].split(' | ')[0]) + 1
+                    return (current_id + 1,i)
+            return (int(valid_lines[-1].split(' | ')[0]) + 1,len(lines)-1)
     except FileNotFoundError:
         print(f"The file {file} was not found")
-
 
 def add(file, details): 
     """Add a new task with the given details to the file."""
     try:
         with open(file, 'r') as f:
-            id = find_first_missing_id(file)
-        with open(file, 'a') as f:
-            f.write(f'{id}' + ' | ' + ' '.join(details) + '\n')
+            id = find_first_missing_id(file)[0]
+            lines = f.readlines()
+            missing_id = find_first_missing_id(file)[1]
+            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
+        with open(file, 'w') as f:
+            f.writelines(lines)
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
 def modify(file, id, details):
-    "TODO"
-    None
+    """Modify the task with the given id in the file with the new details."""
+    modify_id = find_line_by_id(file, id)
+    try:
+        with open(file, 'r') as f:
+            lines = f.readlines()
+        if modify_id != -1:
+            #if the id was found
+            # we modify the line with the new details
+            lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + '\n'
+            with open(file, 'w') as f:
+                f.writelines(lines)
+        else:
+            print(f"The task with id {id} does not exist")
+    except FileNotFoundError:
+        print(f"The file {file} was not found")
 
 def rm(file, id):
-    "TODO"
-    None
+    """Remove the task with the given id from the file."""
+    rm_id = find_line_by_id(file, id)
+    try:
+        with open(file, 'r') as f:
+            lines = f.readlines()
+        if rm_id != -1:
+            #if the id was found 
+            # we remove the line by setting it to an empty string 
+            # then writing back only the non-empty lines
+            lines[rm_id] = ''
+            valid_lines = [l for l in lines if l.strip() != '']
+            with open(file, 'w') as f:
+                f.writelines(valid_lines)
+        else:
+            print(f"The task with id {id} does not exist")
+    except FileNotFoundError:
+        print(f"The file {file} was not found")
 
 def show(file):
     """Show all tasks in the file."""
