@@ -31,26 +31,20 @@ def add(file, details):
         print(f"The file {file} was not found")
 
 def modify(file, id, details):
-    """Modify the task with the given id in the file with the new details."""
-    modify_id = find_line_by_id(file, id)
-    try:
-        with open(file, 'r') as f:
-            lines = f.readlines()
-        if modify_id != -1:
-            #if the id was found
-            # we modify the line with the new details
-            lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + '\n'
-            with open(file, 'w') as f:
-                f.writelines(lines)
-        else:
-            print(f"The task with id {id} does not exist")
-    except FileNotFoundError:
-        print(f"The file {file} was not found")
+    "TODO"
+    None
 
 def rm(file, id):
     "TODO"
     None 
 
 def show(file):
-    "TODO"
-    None
+    """Show all tasks in the file."""
+    try:
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() != '':
+                    print(line.strip())
+    except FileNotFoundError:
+        print(f"The file {file} was not found")
