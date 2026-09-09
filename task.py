@@ -9,8 +9,7 @@ print(options)
 try:
     commands.create_file(options.file)
     if options.command == 'add':
-        id = commands.add(options.file, options.details)
-        print(f"Task added with id: {id}")
+        commands.add(options.file, options.details)
     elif options.command == 'modify':
         commands.modify(options.file, options.id, options.details)
     elif options.command == 'rm':

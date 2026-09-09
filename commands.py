@@ -49,7 +49,7 @@ def add(file, details):
             lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
-            return id
+            print(f"Task added with id: {id}")
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
@@ -94,8 +94,12 @@ def show(file):
     try:
         with open(file, 'r') as f:
             lines = f.readlines()
+            print("+----+----------------+")
+            print("| id | description    |")
+            print("+----+----------------+")
             for line in lines:
                 if line.strip() != '':
-                    print(line.strip())
+                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1]:<14} |")
+                    print("+----+----------------+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
