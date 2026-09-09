@@ -26,8 +26,8 @@ def find_first_missing_id(file):
         with open(file, 'r') as f:
             lines = f.readlines()
             valid_lines = [l.strip() for l in lines if l.strip() != '']
-            if len(valid_lines) == 0:
-                return (1,0)
+            if len(valid_lines) == 0:  # only the header line is present
+                return (1,1)
             for i in range(len(valid_lines)-1):
                 current_line = valid_lines[i]
                 next_line = valid_lines[i+1]
@@ -49,6 +49,8 @@ def add(file, details):
             lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
+        print(f"Task added with id {id}")
+        return id
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
