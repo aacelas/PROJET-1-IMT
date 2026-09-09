@@ -1,11 +1,16 @@
 import argparse
 
+
 def create_parser():
     #Initial parser / file.txt ... 
-    parser = argparse.ArgumentParser(description="THE PARSER")
+    parser = argparse.ArgumentParser(description="Task Manager: Add, modify, remove, and show tasks in a file.")
+
+    #parser.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS, help=help.help_message())
     parser.add_argument("file",type=str, help="The file to process")
+
     
-    subparsers = parser.add_subparsers(help="Sub-command help", dest="command", required=True, )
+    subparsers = parser.add_subparsers(help="Sub-command (add, modify, rm, show)", dest="command", required=True, )
+
     
     #ADD SUBPARSER / file.txt add details
     parser_add = subparsers.add_parser("add", help="Add a new task")

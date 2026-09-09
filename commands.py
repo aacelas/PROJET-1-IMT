@@ -54,7 +54,7 @@ def add(file, details):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def modify(file, id, details):
+def modify(file, id, details, label=None):
     """Modify the task with the given id in the file with the new details."""
     modify_id = find_line_by_id(file, id)
     try:

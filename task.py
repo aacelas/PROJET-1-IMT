@@ -11,7 +11,7 @@ try:
     if options.command == 'add':
         commands.add(options.file, options.details)
     elif options.command == 'modify':
-        commands.modify(options.file, options.id, options.details)
+        commands.modify(options.file, options.id, options.details, options.label)
     elif options.command == 'rm':
         commands.rm(options.file, options.id)
     elif options.command == 'show':
