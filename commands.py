@@ -39,21 +39,21 @@ def find_first_missing_id(file):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def add(file, details): 
+def add(file, details, label): 
     """Add a new task with the given details to the file."""
     try:
         with open(file, 'r') as f:
             id = find_first_missing_id(file)[0]
             lines = f.readlines()
             missing_id = find_first_missing_id(file)[1]
-            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
+            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
             print(f"Task added with id: {id}")
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def modify(file, id, details):
+def modify(file, id, details, label=None):
     """Modify the task with the given id in the file with the new details."""
     modify_id = find_line_by_id(file, id)
     try:
@@ -62,7 +62,10 @@ def modify(file, id, details):
         if modify_id != -1:
             #if the id was found
             # we modify the line with the new details
-            lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + '\n'
+            if label is not None:
+                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n'
+            else:
+                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + lines[modify_id].split(' | ')[2] + '\n'
             with open(file, 'w') as f:
                 f.writelines(lines)
         else:
@@ -94,15 +97,15 @@ def show(file):
     try:
         with open(file, 'r') as f:
             lines = f.readlines()
-            print("+----+----------------+")
-            print("| id | description    |")
-            print("+----+----------------+")
+            print("+----+----------------+---------+")
+            print("| id | description    | label   |")
+            print("+----+----------------+---------+")
             for line in lines:
                 if line.strip() != '':
-                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} |")
+                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} | {line.strip().split(' | ')[2][:8]:<8}")
                     if len(line.strip().split(' | ')[1]) > 14:
                         for i in range(14, len(line.strip().split(' | ')[1]), 14):
-                            print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |")
-                    print("+----+----------------+")
+                            print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |      |")
+                    print("+----+----------------+---------+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
