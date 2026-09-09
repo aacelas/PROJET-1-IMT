@@ -49,6 +49,7 @@ def add(file, details):
             lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
+            return id
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
