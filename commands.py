@@ -1,3 +1,12 @@
+def create_file(file):
+    """Create a new file if it does not exist."""
+    try:
+        with open(file, 'r') as f:
+            pass
+    except FileNotFoundError:
+        with open(file, 'w') as f:
+            pass
+
 def find_line_by_id(file, id):
     """Return the index of the line with the given id in the file, or -1 if not found."""
     try:

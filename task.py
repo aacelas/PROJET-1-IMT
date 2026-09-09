@@ -7,6 +7,7 @@ print(options)
 
 # Exécution de la commande
 try:
+    commands.create_file(options.file)
     if options.command == 'add':
         commands.add(options.file, options.details)
     elif options.command == 'modify':
