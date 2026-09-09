@@ -97,15 +97,15 @@ def show(file):
     try:
         with open(file, 'r') as f:
             lines = f.readlines()
-            print("+----+----------------+---------+")
-            print("| id | description    | label   |")
-            print("+----+----------------+---------+")
+            print("+----+----------------+----------+")
+            print("| id | description    | label    |")
+            print("+----+----------------+----------+")
             for line in lines:
                 if line.strip() != '':
-                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} | {line.strip().split(' | ')[2][:8]:<8}")
+                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} | {line.strip().split(' | ')[2][:8]:<8} |")
                     if len(line.strip().split(' | ')[1]) > 14:
                         for i in range(14, len(line.strip().split(' | ')[1]), 14):
                             print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |      |")
-                    print("+----+----------------+---------+")
+                    print("+----+----------------+----------+")
     except FileNotFoundError:
         print(f"The file {file} was not found")

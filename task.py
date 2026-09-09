@@ -3,7 +3,6 @@ from options_parser import create_parser
 import commands
 parser = create_parser()
 options = parser.parse_args()
-print(options)
 
 # Exécution de la commande
 try:
