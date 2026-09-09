@@ -99,7 +99,10 @@ def show(file):
             print("+----+----------------+")
             for line in lines:
                 if line.strip() != '':
-                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1]:<14} |")
+                    print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} |")
+                    if len(line.strip().split(' | ')[1]) > 14:
+                        for i in range(14, len(line.strip().split(' | ')[1]), 14):
+                            print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |")
                     print("+----+----------------+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
