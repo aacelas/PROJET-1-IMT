@@ -12,7 +12,7 @@ def create_parser():
     parser_add.add_argument("details", nargs='+', default='No details', help="Details of the task to add")
     parser_add.add_argument(
     "--label",
-    choices=["shopping", "sport", "homework", "administrative", "meetings"],
+    choices=["shopping", "sport", "homework", "administrative", "meetings"], required=True,
     help="Label of the task (shopping, sport, homework, administrative, meetings)"
 )
    
