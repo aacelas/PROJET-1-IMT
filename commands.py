@@ -41,7 +41,7 @@ def find_line_by_id(file, id):
         return -1
 
 def find_first_missing_id(file):
-    """Return the first missing id in the file, or 1 if the file is empty."""
+    """Return the first missing id and its index in the file, or (1, 0) if the file is empty."""
     try:
         with open(file, 'r') as f:
             lines = f.readlines()
@@ -54,8 +54,8 @@ def find_first_missing_id(file):
                 current_id = int(current_line.split(' | ')[0])
                 next_id = int(next_line.split(' | ')[0])
                 if next_id != current_id + 1:
-                    return (current_id + 1,i)
-            return (int(valid_lines[-1].split(' | ')[0]) + 1,len(lines)-1)
+                    return (current_id + 1,i+1)
+            return (int(valid_lines[-1].split(' | ')[0]) + 1,len(lines))
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
@@ -68,14 +68,14 @@ def add(file, details, label):
             id = find_first_missing_id(file)[0]
             lines = f.readlines()
             missing_id = find_first_missing_id(file)[1]
-            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + ' | ' + ','.join(label) + '\n')
+            lines.insert(missing_id, f'{id}' + ' | ' + ' '.join(details) + ' | ' + ','.join(label)  + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
             print(f"Task added with id: {id}")
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def modify(file, id, details, label=None):
+def modify(file, id, details=None, label=None):
     create_history_file()
     """Modify the task with the given id in the file with the new details."""
     modify_id = find_line_by_id(file, id)
@@ -90,8 +90,8 @@ def modify(file, id, details, label=None):
             if label is not None:
                 if not is_valid_label(label):
                     raise ValueError(f"Invalid label: {label}. Valid labels are: shopping, sport, homework, administrative, meetings")
-                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + ','.join(label) + '\n'
-            else:
+                lines[modify_id] = f'{id}' + ' | ' + lines[modify_id].split(' | ')[1] + ' | ' + ','.join(label) + '\n'
+            if details is not None:
                 lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + lines[modify_id].split(' | ')[2] + '\n'
             with open(file, 'w') as f:
                 f.writelines(lines)
@@ -126,7 +126,7 @@ def show(file):
     """Show all tasks in the file."""
     with open(file, 'r') as f:
         lines = f.readlines()
-        lines.insert(0, "Id | Desccription | Label")
+        lines.insert(0, "Id | Description | Label")
         line1 = lines[0]
         tallest_chain = [0] * len(line1.split("|"))
         for line in lines:
@@ -153,3 +153,4 @@ def show(file):
                     print("+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
+
