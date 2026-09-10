@@ -9,7 +9,7 @@ print(options)
 try:
     commands.create_file(options.file)
     if options.command == 'add':
-        commands.add(options.file, options.details)
+        commands.add(options.file, options.details, options.label)
     elif options.command == 'modify':
         commands.modify(options.file, options.id, options.details, options.label)
     elif options.command == 'rm':
