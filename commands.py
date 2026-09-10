@@ -1,3 +1,12 @@
+def create_file(file):
+    """Create a new file if it does not exist."""
+    try:
+        with open(file, 'r') as f:
+            pass
+    except FileNotFoundError:
+        with open(file, 'w') as f:
+            pass
+
 def find_line_by_id(file, id):
     """Return the index of the line with the given id in the file, or -1 if not found."""
     try:
@@ -30,20 +39,21 @@ def find_first_missing_id(file):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def add(file, details): 
+def add(file, details, label): 
     """Add a new task with the given details to the file."""
     try:
         with open(file, 'r') as f:
             id = find_first_missing_id(file)[0]
             lines = f.readlines()
             missing_id = find_first_missing_id(file)[1]
-            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + '\n')
+            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
+            print(f"Task added with id: {id}")
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def modify(file, id, details):
+def modify(file, id, details, label=None):
     """Modify the task with the given id in the file with the new details."""
     modify_id = find_line_by_id(file, id)
     try:
@@ -52,7 +62,10 @@ def modify(file, id, details):
         if modify_id != -1:
             #if the id was found
             # we modify the line with the new details
-            lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + '\n'
+            if label is not None:
+                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n'
+            else:
+                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + lines[modify_id].split(' | ')[2] + '\n'
             with open(file, 'w') as f:
                 f.writelines(lines)
         else:
@@ -79,13 +92,54 @@ def rm(file, id):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
+
+
+# def show(file):
+#     """Show all tasks in the file."""
+#     try:
+#         with open(file, 'r') as f:
+#             lines = f.readlines()
+#             print("+----+----------------+----------+")
+#             print("| id | description    | label    |")
+#             print("+----+----------------+----------+")
+#             for line in lines:
+#                 if line.strip() != '':
+#                     print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} | {line.strip().split(' | ')[2][:8]:<8} |")
+#                     if len(line.strip().split(' | ')[1]) > 14:
+#                         for i in range(14, len(line.strip().split(' | ')[1]), 14):
+#                             print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |      |")
+#                     print("+----+----------------+----------+")
+#     except FileNotFoundError:
+#         print(f"The file {file} was not found")
+
+
 def show(file):
     """Show all tasks in the file."""
+    with open(file, 'r') as f:
+        lines = f.readlines()
+        lines.insert(0, "Id | Description | Label")
+        line1 = lines[0]
+        tallest_chain = [0] * len(line1.split("|"))
+        for line in lines:
+            for i in range(len(line.split("|"))) :
+                if tallest_chain[i] < len(line.split("|")[i].strip()) :
+                    tallest_chain[i] = len(line.split("|")[i].strip())
     try:
         with open(file, 'r') as f:
             lines = f.readlines()
+            lines.insert(0, "Id | Description | Label")
+            line1 = lines[0]
+            for i in range(len(line1.split("|"))) :
+                print("+" + "-" + tallest_chain[i] * "-" + "-", end="")
+            print("+")
             for line in lines:
                 if line.strip() != '':
-                    print(line.strip())
+                    line = line.split("|")
+                    for i in range(len(line)) :
+                        print("|" + " " + line[i].strip() + (tallest_chain[i] - len(str(line[i]).strip())) * " " + " ", end="")
+                    print("|")
+                    for i in range(len(line)) :
+                        print("+" + "-" + tallest_chain[i] * "-" + "-", end="")
+                    print("+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
