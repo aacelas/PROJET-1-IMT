@@ -12,7 +12,7 @@ def create_parser():
     parser_add.add_argument("details", nargs='+', default='No details', help="Details of the task to add")
 
     parser_add.add_argument(
-    "--label", required=True, nargs='+',
+    "--label", "-l", required=True, nargs='+',
     help="Label of the task (shopping, sport, homework, administrative, meetings)"
     )
 
@@ -21,7 +21,7 @@ def create_parser():
     parser_modify.add_argument("id", type=int, help="The id of the task to modify")
     parser_modify.add_argument("-d", "--details", nargs='+', help="New details of the task")
     parser_modify.add_argument(
-    "--label", nargs='+',
+    "--label", "-l", nargs='+',
     help="New label of the task, the label must be one of the following: shopping, sport, homework, administrative, meetings"
             )
     
