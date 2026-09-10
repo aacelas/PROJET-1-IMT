@@ -33,4 +33,10 @@ def create_parser():
     #SHOW SUBPARSER / file.txt show
     parser_show = subparsers.add_parser("show", help="Show all tasks")
 
+    # FUTURE SUBPARSER / file.txt future
+parser_future = subparsers.add_parser(
+    "future",
+    help="Manage a future task"
+)
+
     return parser
