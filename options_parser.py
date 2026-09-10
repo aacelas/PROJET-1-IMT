@@ -10,20 +10,19 @@ def create_parser():
     #ADD SUBPARSER / file.txt add details
     parser_add = subparsers.add_parser("add", help="Add a new task")
     parser_add.add_argument("details", nargs='+', default='No details', help="Details of the task to add")
+
     parser_add.add_argument(
-    "--label",
-    choices=["shopping", "sport", "homework", "administrative", "meetings"], required=True,
+    "--label", required=True, nargs='+',
     help="Label of the task (shopping, sport, homework, administrative, meetings)"
-)
-   
+    )
+
     #MODIFY SUBPARSER / file.txt modify id details
     parser_modify = subparsers.add_parser("modify", help="Modify an existing task")
     parser_modify.add_argument("id", type=int, help="The id of the task to modify")
     parser_modify.add_argument("details", nargs='+', default='No details', help="New details of the task")
     parser_modify.add_argument(
     "--label",
-    choices=["shopping", "sport", "homework", "administrative", "meetings"],
-    help="New label of the task"
+    help="New label of the task, the label must be one of the following: shopping, sport, homework, administrative, meetings"
 )
     
     #RM SUBPARSER / file.txt rm id

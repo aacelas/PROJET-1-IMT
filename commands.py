@@ -7,6 +7,17 @@ def create_file(file):
         with open(file, 'w') as f:
             pass
 
+def is_valid_label(label):
+    """Check if the label is valid."""
+    if isinstance(label, list):
+        for l in label:
+            if l not in ["shopping", "sport", "homework", "administrative", "meetings"]:
+                return False
+    else:
+        if label not in ["shopping", "sport", "homework", "administrative", "meetings"]:
+            return False
+    return True
+
 def find_line_by_id(file, id):
     """Return the index of the line with the given id in the file, or -1 if not found."""
     try:
@@ -42,11 +53,13 @@ def find_first_missing_id(file):
 def add(file, details, label): 
     """Add a new task with the given details to the file."""
     try:
-        with open(file, 'r') as f:
+        if not is_valid_label(label):
+            raise ValueError(f"Invalid label: {label}. Valid labels are: shopping, sport, homework, administrative, meetings")
+        with open(file, 'r') as f:  
             id = find_first_missing_id(file)[0]
             lines = f.readlines()
             missing_id = find_first_missing_id(file)[1]
-            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n')
+            lines.insert(missing_id+1, f'{id}' + ' | ' + ' '.join(details) + ' | ' + ' '.join(label) + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
             print(f"Task added with id: {id}")
@@ -63,7 +76,9 @@ def modify(file, id, details, label=None):
             #if the id was found
             # we modify the line with the new details
             if label is not None:
-                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + label + '\n'
+                if not is_valid_label(label):
+                    raise ValueError(f"Invalid label: {label}. Valid labels are: shopping, sport, homework, administrative, meetings")
+                lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + ' '.join(label) + '\n'
             else:
                 lines[modify_id] = f'{id}' + ' | ' + ' '.join(details) + ' | ' + lines[modify_id].split(' | ')[2] + '\n'
             with open(file, 'w') as f:
