@@ -34,9 +34,15 @@ def create_parser():
     parser_show = subparsers.add_parser("show", help="Show all tasks")
 
     # FUTURE SUBPARSER / file.txt future
-parser_future = subparsers.add_parser(
-    "future",
-    help="Manage a future task"
-)
+    parser_future = subparsers.add_parser("future",help="Manage a future task")
+    future_subparser = parser.add_subparsers(help="Sub-command for future", dest="future", required=True, )
 
+    #PARSER DATE / file.txt future date
+    parser_date = future_subparser.add_parser("date", help="Add future task with date")
+    parser_date.add_argument("date", type=int, help="The date of the task")
+
+    #PARSER TASK / file.txt future task
+    parser_task = future_subparser.add_parser("task", help="Add future task with task")
+    parser_task.add_argument("id", type=int, help="id of the previows task")
+    
     return parser
