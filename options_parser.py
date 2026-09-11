@@ -1,7 +1,7 @@
 import argparse
 
 def create_parser():
-    #Initial parser / file.txt ...
+    #Initial parser / file.txt 
     parser = argparse.ArgumentParser(description="THE PARSER")
     parser.add_argument("file", type=str, help="The file to process")
 
