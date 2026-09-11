@@ -14,7 +14,7 @@ def create_parser():
     "--label",
     choices=["shopping", "sport", "homework", "administrative", "meetings"], required=True,
     help="Label of the task (shopping, sport, homework, administrative, meetings)"
-)
+   )
    
     #MODIFY SUBPARSER / file.txt modify id details
     parser_modify = subparsers.add_parser("modify", help="Modify an existing task")
@@ -24,7 +24,7 @@ def create_parser():
     "--label",
     choices=["shopping", "sport", "homework", "administrative", "meetings"],
     help="New label of the task"
-)
+    )
     
     #RM SUBPARSER / file.txt rm id
     parser_rm = subparsers.add_parser("rm", help="Remove an existing task")
@@ -34,15 +34,17 @@ def create_parser():
     parser_show = subparsers.add_parser("show", help="Show all tasks")
 
     # FUTURE SUBPARSER / file.txt future
-    parser_future = subparsers.add_parser("future",help="Manage a future task")
-    future_subparser = parser.add_subparsers(help="Sub-command for future", dest="future", required=True, )
+    parser_future = subparsers.add_parser("future", help="Add a future task")
+    parser_future.add_argument("details", nargs="+", help="Details of the future task")
+    parser_future.add_argument("--label", "-l", required=True, nargs="+",help="Label of the future task")
+    future_subparsers = parser_future.add_subparsers(dest="future_command", required=True)
 
-    #PARSER DATE / file.txt future date
-    parser_date = future_subparser.add_parser("date", help="Add future task with date")
-    parser_date.add_argument("date", type=int, help="The date of the task")
+    # DATE / file.txt future ... date
+    parser_date = future_subparsers.add_parser("date", help="Future task starting from a date")
+    parser_date.add_argument("date",type=int,help="The date of the task")
 
-    #PARSER TASK / file.txt future task
-    parser_task = future_subparser.add_parser("task", help="Add future task with task")
-    parser_task.add_argument("id", type=int, help="id of the previows task")
+   # TASK / file.txt future ... task
+    parser_task = future_subparsers.add_parser( "task", help="Future task depending on another task")
+    parser_task.add_argument("id", type=int, help="Id of the previous task")
     
     return parser
