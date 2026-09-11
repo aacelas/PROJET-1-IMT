@@ -26,7 +26,9 @@ def check_date_tasks(future_file, file):
             for line in lines:
                 if line.strip() != '':
                     task_id, details, label, date = line.strip().split(' | ')
-                    if date <= datetime.now().strftime("%Y-%m-%d"):
+                    if date == '':
+                        continue
+                    elif date <= datetime.now().strftime("%Y-%m-%d"):
                         add(file, details.split(), label.split(','))
                         rm(future_file, int(task_id), True)
     except FileNotFoundError:
