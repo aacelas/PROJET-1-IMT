@@ -28,7 +28,21 @@ def check_date_tasks(future_file, file):
                     task_id, details, label, date = line.strip().split(' | ')
                     if date <= datetime.now().strftime("%Y-%m-%d"):
                         add(file, details.split(), label.split(','))
-                        rm(future_file, int(task_id), future_condition=True)
+                        rm(future_file, int(task_id), True)
+    except FileNotFoundError:
+        print(f"The file {future_file} was not found")
+
+def check_future_tasks(future_file, file, removed_id):
+    """Check if there are any future tasks that depend on the removed task."""
+    try:
+        with open(future_file, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() != '':
+                    task_id, details, label, date, id = line.strip().split(' | ')
+                    if id == str(removed_id):
+                        add(file, details.split(), label.split(','))
+                        rm(future_file, int(task_id), True)
     except FileNotFoundError:
         print(f"The file {future_file} was not found")
 
@@ -133,6 +147,7 @@ def rm(file, id, future_condition=False):
             valid_lines = [l for l in lines if l.strip() != '']
             with open(file, 'w') as f:
                 f.writelines(valid_lines)
+            check_future_tasks('future_task.txt',file,rm_id)
         else:
             print(f"The task with id {id} does not exist")
     except FileNotFoundError:
