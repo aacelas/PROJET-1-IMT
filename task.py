@@ -16,6 +16,11 @@ try:
         commands.rm(options.file, options.id)
     elif options.command == 'show':
         commands.show(options.file)
+    elif options.command == 'future':
+        if options.date is not None:
+            commands.add_future_task(options.file, options.details, options.label, options.date, None)
+        elif options.task is not None:
+            commands.add_future_task(options.file, options.details, options.label, None, options.task)
 except Exception as e:
     print(f"An error occurred: {e}")
     print(f"command {options.command} failed")
