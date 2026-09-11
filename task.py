@@ -15,6 +15,8 @@ try:
         commands.rm(options.file, options.id)
     elif options.command == 'show':
         commands.show(options.file)
+    elif options.command == 'future':
+        commands.future(options.file, options.details, options.label, options.future_condition)
 except Exception as e:
     print(f"An error occurred: {e}")
     print(f"command {options.command} failed")

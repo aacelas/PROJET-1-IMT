@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def create_file(file):
     """Create a new file if it does not exist."""
     try:
@@ -15,6 +17,20 @@ def create_history_file():
     except FileNotFoundError:
         with open("history.txt", 'w') as f:
             pass
+
+def check_date_tasks(future_file, file):
+    """Check if there are any future tasks that need to be added to the main file."""
+    try:
+        with open(future_file, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() != '':
+                    task_id, details, label, date = line.strip().split(' | ')
+                    if date <= datetime.now().strftime("%Y-%m-%d"):
+                        add(file, details.split(), label.split(','))
+                        rm(future_file, int(task_id), future_condition=True)
+    except FileNotFoundError:
+        print(f"The file {future_file} was not found")
 
 def is_valid_label(label):
     """Check if the label is valid."""
@@ -99,15 +115,16 @@ def modify(file, id, details=None, label=None):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
-def rm(file, id):
+def rm(file, id, future_condition=False):
     create_history_file()
     """Remove the task with the given id from the file."""
     rm_id = find_line_by_id(file, id)
     try:
-        with open(file, 'r') as f:
-            lines = f.readlines()
-            with open("history.txt", 'a') as history_file:
-                            history_file.write(lines[rm_id].strip() + "  ---> removed" + '\n')
+        if future_condition == False:
+            with open(file, 'r') as f:
+                lines = f.readlines()
+                with open("history.txt", 'a') as history_file:
+                    history_file.write(lines[rm_id].strip() + "  ---> removed" + '\n')
         if rm_id != -1:
             #if the id was found 
             # we remove the line by setting it to an empty string 
@@ -123,6 +140,7 @@ def rm(file, id):
 
 def show(file):
     """Show all tasks in the file."""
+    check_date_tasks('future_task.txt',file)
     with open(file, 'r') as f:
         lines = f.readlines()
         lines.insert(0, "Id | Description | Label")
@@ -152,4 +170,3 @@ def show(file):
                     print("+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
-
