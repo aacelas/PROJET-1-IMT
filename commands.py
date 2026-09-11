@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 def create_file(file):
     """Create a new file if it does not exist."""
@@ -9,14 +10,13 @@ def create_file(file):
         with open(file, 'w') as f:
             pass
 
-def create_history_file():
-    """Create a new history file if it does not exist."""
+def is_date_valid(date):
+    # This function verify if a date exists and 
     try:
-        with open("history.txt", 'r') as f:
-            pass
-    except FileNotFoundError:
-        with open("history.txt", 'w') as f:
-            pass
+        datetime.strptime(date, "%d/%m/%Y")
+        return True
+    except ValueError:
+        return False
 
 def check_date_tasks(future_file, file):
     """Check if there are any future tasks that need to be added to the main file."""
@@ -108,6 +108,7 @@ def add(file, details, label):
         print(f"The file {file} was not found")
 
 def modify(file, id, details=None, label=None):
+    create_file("history.txt")
     """Modify the task with the given id in the file with the new details."""
     modify_id = find_line_by_id(file, id)
     try:
@@ -116,7 +117,7 @@ def modify(file, id, details=None, label=None):
             with open("history.txt", 'a') as history_file:
                 history_file.write(lines[modify_id].strip() + "  ---> modified" + '\n')
         if modify_id != -1:
-            #if the id was found
+            #if then id was found
             # we modify the line with the new details
             if label is not None:
                 if not is_valid_label(label):
@@ -169,7 +170,6 @@ def show(file):
                     tallest_chain[i] = len(line.split("|")[i].strip())
     try:
         with open(file, 'r') as f:
-            print(tallest_chain)
             lines = f.readlines()
             lines.insert(0, "Id | Description | Label")
             line1 = lines[0]
@@ -187,3 +187,24 @@ def show(file):
                     print("+")
     except FileNotFoundError:
         print(f"The file {file} was not found")
+
+def add_future_task(file, details, label, date, id) :
+    # Add a new task and its date of beginning or the id of the task to be finished before to begin this new task.
+    create_file("future_tasks.txt")
+    with open("future_tasks.txt", 'r') as f:  
+                id_ = find_first_missing_id("future_tasks.txt")[0]
+                lines = f.readlines()
+                missing_id = find_first_missing_id("future_tasks.txt")[1]
+                if not is_valid_label(label):
+                    raise ValueError(f"Invalid label: {label}. Valid labels are: shopping, sport, homework, administrative, meetings")
+                if date == None :
+                    if find_line_by_id(file, id) == -1 :
+                        raise ValueError(f"L'id ne correspond pas à une tâche existante dans le fichier {file}.")
+                    lines.insert(missing_id, f'{id_}' + " | " + ' '.join(details) + " | " + ','.join(label) + " |" + "| " + str(id)+"\n")
+                elif id == None :
+                    if not is_date_valid(date) :
+                        raise ValueError(f"La date {date} n'est pas au format jj/mm/aaaa ou n'existe pas.")
+                    lines.insert(missing_id, f'{id_}' + " | " + ' '.join(details) + " | " + ','.join(label) + " | " + date + " |" + "\n")
+    with open("future_tasks.txt", 'w') as f:
+            f.writelines(lines)
+    print(f"Future task added with id: {id_}")
