@@ -63,6 +63,7 @@ def find_first_missing_id(file):
         print(f"The file {file} was not found")
 
 def add(file, details, label): 
+def add(file, details, label): 
     """Add a new task with the given details to the file."""
     try:
         if not is_valid_label(label):
@@ -74,6 +75,7 @@ def add(file, details, label):
             lines.insert(missing_id, f'{id}' + ' | ' + ' '.join(details) + ' | ' + ','.join(label)  + '\n')
         with open(file, 'w') as f:
             f.writelines(lines)
+            print(f"Task added with id: {id}")
             print(f"Task added with id: {id}")
     except FileNotFoundError:
         print(f"The file {file} was not found")
@@ -156,8 +158,38 @@ def rm(file, id):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
+
+
+# def show(file):
+#     """Show all tasks in the file."""
+#     try:
+#         with open(file, 'r') as f:
+#             lines = f.readlines()
+#             print("+----+----------------+----------+")
+#             print("| id | description    | label    |")
+#             print("+----+----------------+----------+")
+#             for line in lines:
+#                 if line.strip() != '':
+#                     print(f"| {line.strip().split(' | ')[0]:<2} | {line.strip().split(' | ')[1][:14]:<14} | {line.strip().split(' | ')[2][:8]:<8} |")
+#                     if len(line.strip().split(' | ')[1]) > 14:
+#                         for i in range(14, len(line.strip().split(' | ')[1]), 14):
+#                             print(f"|    | {line.strip().split(' | ')[1][i:i+14]:<14} |      |")
+#                     print("+----+----------------+----------+")
+#     except FileNotFoundError:
+#         print(f"The file {file} was not found")
+
+
 def show(file):
     """Show all tasks in the file."""
+    with open(file, 'r') as f:
+        lines = f.readlines()
+        lines.insert(0, "Id | Description | Label")
+        line1 = lines[0]
+        tallest_chain = [0] * len(line1.split("|"))
+        for line in lines:
+            for i in range(len(line.split("|"))) :
+                if tallest_chain[i] < len(line.split("|")[i].strip()) :
+                    tallest_chain[i] = len(line.split("|")[i].strip())
     with open(file, 'r') as f:
         lines = f.readlines()
         lines.insert(0, "Id | Description | Label")
@@ -171,6 +203,11 @@ def show(file):
         with open(file, 'r') as f:
             print(tallest_chain)
             lines = f.readlines()
+            lines.insert(0, "Id | Description | Label")
+            line1 = lines[0]
+            for i in range(len(line1.split("|"))) :
+                print("+" + "-" + tallest_chain[i] * "-" + "-", end="")
+            print("+")
             lines.insert(0, "Id | Description | Label")
             line1 = lines[0]
             for i in range(len(line1.split("|"))) :
