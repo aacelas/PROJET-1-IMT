@@ -1,3 +1,6 @@
+from datetime import datetime
+import re
+
 def create_file(file):
     """Create a new file if it does not exist."""
     try:
@@ -75,6 +78,37 @@ def add(file, details, label):
     except FileNotFoundError:
         print(f"The file {file} was not found")
 
+
+def is_date_valid(date):
+    # This function verify if a date exists and 
+    try:
+        datetime.strptime(date, "%d/%m/%Y")
+        return True
+    except ValueError:
+        return False
+
+
+def add_future_task(file, details, label, date, id) :
+    # Add a new task and its date of beginning or the id of the task to be finished before to begin this new task.
+    create_file("future_tasks.txt")
+    if not is_valid_label(label):
+        raise ValueError(f"Invalid label: {label}. Valid labels are: shopping, sport, homework, administrative, meetings")
+    if date == None :
+        if find_line_by_id(file, id) == -1 :
+            print(f"L'id ne correspond pas à une tâche existante dans le fichier {file}.")
+            return
+        with open("future_tasks.txt", 'a') as f :
+            f.write(details + " | " + label + " | " + None + " | " + id)
+            return
+    elif id == None :
+        if not is_date_valid(date) :
+            print(f"La date {date} n'est pas au format jj/mm/aaaa ou n'existe pas.")
+            return
+        with open("future_tasks.txt", 'a') as f :
+            f.write(details + " | " + label + " | " + date + " | " + None)
+            return
+
+
 def modify(file, id, details=None, label=None):
     create_history_file()
     """Modify the task with the given id in the file with the new details."""
@@ -108,7 +142,7 @@ def rm(file, id):
         with open(file, 'r') as f:
             lines = f.readlines()
             with open("history.txt", 'a') as history_file:
-                            history_file.write(lines[rm_id].strip() + "  ---> removed" + '\n')
+                history_file.write(lines[rm_id].strip() + "  ---> removed" + '\n')
         if rm_id != -1:
             #if the id was found 
             # we remove the line by setting it to an empty string 
