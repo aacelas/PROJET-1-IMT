@@ -133,7 +133,7 @@ def modify(file, id, details=None, label=None):
         print(f"The file {file} was not found")
 
 def rm(file, id, future_condition=False):
-    create_history_file()
+    create_file('history.txt')
     """Remove the task with the given id from the file."""
     rm_id = find_line_by_id(file, id)
     try:
@@ -150,7 +150,7 @@ def rm(file, id, future_condition=False):
             valid_lines = [l for l in lines if l.strip() != '']
             with open(file, 'w') as f:
                 f.writelines(valid_lines)
-            check_future_tasks('future_task.txt',file,rm_id)
+            check_future_tasks('future_tasks.txt',file,rm_id)
         else:
             print(f"The task with id {id} does not exist")
     except FileNotFoundError:
@@ -158,7 +158,7 @@ def rm(file, id, future_condition=False):
 
 def show(file):
     """Show all tasks in the file."""
-    check_date_tasks('future_task.txt',file)
+    check_date_tasks('future_tasks.txt',file)
     with open(file, 'r') as f:
         lines = f.readlines()
         lines.insert(0, "Id | Description | Label")
